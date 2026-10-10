@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Integrity Monitor | Cybersecurity</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 35px 20px;
+            font-family: Arial, sans-serif;
+            background: #0b1120;
+            color: #e2e8f0;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+            display: grid;
+            place-items: center;
+            background: #164e63;
+            border: 1px solid #22d3ee;
+            border-radius: 14px;
+            font-size: 27px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #67e8f9;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: 1px solid #155e75;
+            border-radius: 20px;
+            color: #67e8f9;
+            font-size: 12px;
+        }
+
+        .panel {
+            padding: 24px;
+            margin-bottom: 22px;
+            background: #111c30;
+            border: 1px solid #263449;
+            border-radius: 16px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 19px;
+        }
+
+        .description {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .primary {
+            background: #67e8f9;
+            color: #083344;
+        }
+
+        .secondary {
+            background: #263449;
+            color: #e2e8f0;
+            border: 1px solid #475569;
+        }
+
+        .message {
+            padding: 14px 16px;
+            background: #123b43;
+            border: 1px solid #155e63;
+            border-radius: 9px;
+            color: #a5f3fc;
+            overflow-wrap: anywhere;
+        }
+
+        .report-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .report-heading h2 {
+            margin-bottom: 0;
+        }
+
+        .count {
+            padding: 6px 10px;
+            background: #263449;
+            border-radius: 20px;
+            color: #cbd5e1;
+            font-size: 12px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 22px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #263449;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            color: #94a3b8;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        td:first-child {
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .unchanged {
+            background: #143b2c;
+            color: #86efac;
+        }
+
+        .modified, .missing {
+            background: #4c2029;
+            color: #fca5a5;
+        }
+
+        .new {
+            background: #493817;
+            color: #fcd34d;
+        }
+
+        .empty {
+            padding: 25px 0;
+            color: #94a3b8;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        footer {
+            padding: 10px 0;
+            color: #64748b;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 14px;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <header class="header">
+        <div class="logo">🛡️</div>
+        <div>
+            <h1>File Integrity Monitor</h1>
+            <p class="subtitle">
+                File change detection and integrity verification
+            </p>
+            <span class="tag">SHA-256 PROTECTION</span>
+        </div>
+    </header>
+
+    <section class="panel">
+        <h2>Security Control Panel</h2>
+        <p class="description">
+            Save a trusted baseline of your files, then scan them to
+            identify modifications, new files, and missing files.
+        </p>
+
+        <div class="actions">
+            <form action="{{ url_for('baseline') }}" method="post">
+                <button class="primary" type="submit">
+                    Create Baseline
+                </button>
+            </form>
+
+            <form action="{{ url_for('check') }}" method="post">
+                <button class="secondary" type="submit">
+                    Check Integrity
+                </button>
+            </form>
+        </div>
+    </section>
+
+    {% for message in get_flashed_messages() %}
+        <p class="message">{{ message }}</p>
+    {% endfor %}
+
+    <section class="panel">
+        <div class="report-heading">
+            <h2>Integrity Report</h2>
+
+            {% if report is not none %}
+                <span class="count">
+                    {{ report | length }} result(s)
+                </span>
+            {% endif %}
+        </div>
+
+        {% if report is none %}
+            <div class="empty">
+                <p>No baseline has been created yet.</p>
+                <p>Create a baseline to start monitoring your files.</p>
+            </div>
+
+        {% elif report %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Integrity Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in report %}
+                        <tr>
+                            <td>{{ item.filename }}</td>
+                            <td>
+                                <span class="status {{ item.status | lower }}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+            <div class="empty">
+                No files found in the monitored folder.
+            </div>
+        {% endif %}
+    </section>
+
+    <footer>
+        File Integrity Monitor · Python · Flask · SHA-256
+    </footer>
+</main>
+</body>
+</html>
